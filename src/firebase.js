@@ -20,7 +20,7 @@ const auth = firebase.auth()
 
 // collection references
 const usersCollection = db.collection('users')
-// const postsCollection = db.collection('posts')
+const postsCollection = db.collection('posts')
 const categoriesCollection = db.collection('categories')
 
 // export utils/refs
@@ -28,6 +28,6 @@ export {
     db,
     auth,
     usersCollection,
-    // postsCollection,
+    postsCollection,
     categoriesCollection
 }

@@ -1,7 +1,7 @@
 <template>
     <ul class="points">
         <li>
-            <router-link to="/">Dashboard</router-link>
+            <router-link to="/dashboard">Dashboard</router-link>
         </li>
         <li>
             <router-link to="/settings">Settings</router-link>
