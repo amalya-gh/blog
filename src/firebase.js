@@ -1,6 +1,7 @@
-import * as firebase from 'firebase/app'
+import { firebase } from '@firebase/app'
 import 'firebase/auth'
 import 'firebase/firestore'
+
 
 const firebaseConfig = {
     apiKey: "AIzaSyD8Wb1bKGY3qQHcRs69n5XPmmiVwHMVVts",
@@ -8,7 +9,8 @@ const firebaseConfig = {
     projectId: "willingandable-ed688",
     storageBucket: "willingandable-ed688.appspot.com",
     messagingSenderId: "997334913471",
-    appId: "1:997334913471:web:6808fdc590a3e0dac5d10a"
+    appId: "1:997334913471:web:6808fdc590a3e0dac5d10a",
+    databaseURL: "firebase-adminsdk-keqai@willingandable-ed688.iam.gserviceaccount.com"
 }
 firebase.initializeApp(firebaseConfig)
 

@@ -1,27 +1,18 @@
 <template>
-    <div id="login">
+    <div class="login">
         <section>
-            <div class="col1">
-                <h1>Vuegram</h1>
-                <p>Welcome to the <a href="https://savvyapps.com/" target="_blank">Savvy Apps</a> sample social media web app powered by Vue.js and Firebase.
-                    Build this project by checking out The Definitive Guide to Getting Started with Vue.js</p>
-            </div>
             <div class="col2">
-                <form>
-                    <h1>Welcome Back</h1>
-                    <div>
-                        <label for="email1">Email</label>
-                        <input type="text" placeholder="you@email.com" id="email1" />
+                <form @submit.prevent>
+                    <h1>Admin Login</h1>
+                    <div class="input-block">
+                        <label for="email">Email</label>
+                        <input v-model="loginForm.email" type="text" placeholder="you@email.com" id="email" />
                     </div>
-                    <div>
-                        <label for="password1">Password</label>
-                        <input type="password" placeholder="******" id="password1" />
+                    <div class="input-block">
+                        <label for="password">Password</label>
+                        <input v-model="loginForm.password" type="password" placeholder="******" id="password" />
                     </div>
-                    <button class="button">Log In</button>
-                    <div class="extras">
-                        <a>Forgot Password</a>
-                        <a>Create an Account</a>
-                    </div>
+                    <button @click="login()" class="button">Log In</button>
                 </form>
             </div>
         </section>
@@ -30,10 +21,62 @@
 
 <script>
     export default {
-        name: "Login"
+        name: "Login",
+        data() {
+            return {
+                loginForm: {
+                    email: '',
+                    password: ''
+                }
+            }
+        },
+        methods:{
+            login() {
+                this.$store.dispatch('login', {
+                    username: this.loginForm.email,
+                    password: this.loginForm.password
+                })
+            }
+        }
     }
 </script>
 
 <style scoped>
+    .login{
+        width: 500px;
+        margin: 0 auto;
+        transform: translateY(50%);
+        box-shadow: 0 0 10px grey;
+        padding: 35px;
+        border-radius:6px;
+    }
+    .button{
+        background: #39557c;
+        color:#fff;
+        border-radius:10px;
+        width:100%;
+        padding:20px;
+        border: none;
+        outline: none;
+    }
+    .input-block {
+        margin-top:20px;
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        text-align: left;
+    }
+    .input-block input{
+        flex-grow: 2;
+        margin-left: 20px;
+        padding: 10px;
+        outline: none;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+    }
+    .input-block label{
+        width:100px;
+    }
 
 </style>
