@@ -1,11 +1,8 @@
 <template>
-    <div class="col2">
-        <div v-if="posts.length">
-            <div v-for="post in posts" :key="post.id" class="post">
-                <h5>{{ post.userName }}</h5>
-                <span>{{ post.createdOn | formatDate }}</span>
-                <p>{{ post.content}}</p>
-            </div>
+    <div class="main-site">
+        <h1>All posts</h1>
+        <div v-if="posts.length" class="main-block">
+            <single-post v-for="post in posts" :key="post.id"  :post="post"/>
         </div>
         <div v-else>
             <p class="no-results">There are currently no posts</p>
@@ -15,24 +12,31 @@
 
 <script>
   import {mapState} from "vuex";
-  import moment from "moment";
+  import SinglePost from "../components/SinglePost";
 
   export default {
     name: "Site",
-    computed: {
+      components: {SinglePost},
+      computed: {
       ...mapState(['posts'])
-    },
-    filters: {
-      formatDate(val) {
-        if (!val) { return '-' }
-
-        let date = val.toDate()
-        return moment(date).fromNow()
-      }
     }
   }
 </script>
 
 <style scoped>
-
+    .main-site{
+        background: url(../assets/bg.jpg) no-repeat center center;
+        min-height: 100vh;
+        background-size: cover;
+    }
+    .main-site h1{
+        margin:0;
+        padding: 20px;
+        text-align: left;
+    }
+.main-block{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+}
 </style>

@@ -26,8 +26,13 @@ const routes = [
     component: () => import(/* webpackChunkName: "login" */ '../views/Login.vue')
   },
   {
-    path: '/settings',
-    name: 'settings',
+    path: '/posts',
+    name: 'Posts',
+    component: () => import(/* webpackChunkName: "login" */ '../views/Posts.vue')
+  },
+  {
+    path: '/categories',
+    name: 'categories',
     component: () => import(/* webpackChunkName: "settings" */ '../views/Categories.vue'),
     meta: {
       requiresAuth: true

@@ -66,8 +66,13 @@ const store = new Vuex.Store({
         content: post.content,
         userId: fb.auth.currentUser.uid,
         userName: state.userProfile.username,
-        category: post.category
+        category: post.category,
+        title: post.title
       })
+    },
+    // eslint-disable-next-line no-empty-pattern
+    async deletePostFromFb({ }, post) {
+      await fb.postsCollection.doc(post).delete()
     }
   }
 })

@@ -4,7 +4,10 @@
             <router-link to="/dashboard">Dashboard</router-link>
         </li>
         <li>
-            <router-link to="/settings">Settings</router-link>
+            <router-link to="/categories">Categories</router-link>
+        </li>
+        <li>
+            <router-link to="/posts">Posts</router-link>
         </li>
         <li><a @click="logout()">logout</a></li>
     </ul>

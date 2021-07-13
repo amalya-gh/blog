@@ -9,7 +9,8 @@
         <div class="content">
             <div class="col1">
                 <div class="categories">
-                    <h2>Categories List</h2>
+                    <h2>Create a post</h2>
+                    <p>Choose category</p>
                     <div class="post-categories">
                         <p v-for="(i, index) in categories"
                            :key="index"
@@ -20,25 +21,24 @@
                         </p>
                     </div>
                     <div class="create-post">
-                        <p>create a post</p>
-                        <form @submit.prevent>
-                            <textarea v-model="post.content"></textarea>
+                        <form class="crete-post-form" @submit.prevent>
+                            <label>
+                                Post title<br>
+                                <input type="text" v-model="post.title">
+                            </label>
+                            <label>
+                                Post content<br>
+                                <textarea v-model="post.content" class="post-content"></textarea>
+                            </label>
                             <button @click="createPost()" :disabled="post.content === ''" class="button">post</button>
                         </form>
                     </div>
                 </div>
             </div>
             <div class="">
+                <h3>Existing posts </h3>
                 <div v-if="posts.length" class="post-block">
-                    <div v-for="post in posts" :key="post.id" class="post">
-                        <h5>{{ post.userName }}</h5>
-                        <span>{{ post.createdOn | formatDate }}</span>
-                        <p>{{ post.content}}</p>
-                        Categories
-                        <div class="post-categories">
-                        <p v-for="i in post.category" :key="i+'post'">{{i}}</p>
-                        </div>
-                    </div>
+                    <single-post v-for="post in posts" :key="post.id" :post="post"/>
                 </div>
                 <div v-else>
                     <p class="no-results">There are currently no posts</p>
@@ -51,15 +51,16 @@
 <script>
   import DashboardNav from "../components/DashboardNav";
   import {mapState} from "vuex";
-  import moment from 'moment';
+  import SinglePost from "../components/SinglePost";
 
   export default {
     name: "Dashboard",
-    components: {DashboardNav},
+    components: {SinglePost, DashboardNav},
     data() {
       return {
         post: {
-          content: ''
+          content: '',
+          title: ''
         },
         categoriesList: []
       }
@@ -67,7 +68,7 @@
     computed: {
       ...mapState(['userProfile', 'posts', 'categories'])
     },
-    // single post@ arandznin component + update u delete + masivi mas@ categorianeri + dizayn@ u code review commentner
+    // update u delete + masivi mas@ categorianeri + dizayn@ u code review commentner
     watch: {
       categories(val) {
         return val
@@ -78,23 +79,18 @@
     },
     methods: {
       createPost() {
-        this.$store.dispatch('createPost', {content: this.post.content, category: this.categoriesList})
+        this.$store.dispatch('createPost', {
+          content: this.post.content,
+          category: this.categoriesList,
+          title: this.post.title
+        })
         this.post.content = ''
+        this.post.title = ''
       },
       selectCategory(val, e) {
         this.categoriesList.push(val.categoryName)
         this.$store.dispatch('getCategory', val.id)
         e.target.classList.add('clicked')
-      }
-    },
-    filters: {
-      formatDate(val) {
-        if (!val) {
-          return '-'
-        }
-
-        let date = val.toDate()
-        return moment(date).fromNow()
       }
     }
   }
@@ -121,13 +117,6 @@
         padding: 20px;
     }
 
-    .post {
-        border: 1px solid #ccc;
-        padding: 15px;
-        border-radius: 6px;
-        width: 45%
-    }
-
     .post-block {
         display: flex;
         justify-content: space-between;
@@ -146,10 +135,22 @@
         background: #39557c;
         color: #fff
     }
-    .post-categories{
-        display: flex;
+    .post-content{
+        width: 300px;
+        height: 200px;
+        border: 1px solid #ccc;
     }
-    .post-categories p{
-        margin:6px;
+    .button{
+        background: #39557c;
+        padding: 10px 30px;
+        border-radius: 6px;
+        border: none;
+        text-transform: uppercase;
+        color:#fff
+    }
+    .crete-post-form{
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
     }
 </style>
