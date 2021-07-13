@@ -1,61 +1,56 @@
 <template>
     <div class="main">
         <div class="menu">
-            <h3> Welcome
-                {{userProfile.username}}
-            </h3>
             <dashboard-nav/>
         </div>
         <div class="content">
-            <div class="col1">
-                <div class="categories">
-                    <h2>Create a post</h2>
-                    <p>Choose category</p>
-                    <div class="post-categories">
-                        <p v-for="(i, index) in categories"
-                           :key="index"
-                           @click="selectCategory(i, $event)"
-                           class="category"
-                        >
-                            {{i.categoryName}}
-                        </p>
-                    </div>
-                    <div class="create-post">
-                        <form class="crete-post-form" @submit.prevent>
-                            <label>
-                                Post title<br>
-                                <input type="text" v-model="post.title">
-                            </label>
-                            <label>
-                                Post content<br>
-                                <textarea v-model="post.content" class="post-content"></textarea>
-                            </label>
-                            <button @click="createPost()" :disabled="post.content === ''" class="button">post</button>
-                        </form>
-                    </div>
+            <h3> Welcome
+                {{userProfile.username}}
+            </h3>
+            <div class="categories">
+                <h2>Create a post</h2>
+                <p class="m-0">Choose category</p>
+                <div class="post-categories">
+                    <ul class="filter-category" v-for="(list, index) in categories" :key="index">
+                        <list-category :data="list" :category-id="list.categoryId"  @click="selectCategory(list, $event)"></list-category>
+                    </ul>
+<!--                    <p v-for="(i, index) in categories"-->
+<!--                       :key="index"-->
+<!--                       @click="selectCategory(i, $event)"-->
+<!--                       class="category"-->
+<!--                    >-->
+<!--                        {{i.categoryName}}-->
+<!--                    </p>-->
                 </div>
-            </div>
-            <div class="">
-                <h3>Existing posts </h3>
-                <div v-if="posts.length" class="post-block">
-                    <single-post v-for="post in posts" :key="post.id" :post="post"/>
-                </div>
-                <div v-else>
-                    <p class="no-results">There are currently no posts</p>
+                <div class="create-post">
+                    <form class="crete-post-form" @submit.prevent>
+                        <label>
+                            Post title<br>
+                            <input type="text" v-model="post.title">
+                        </label>
+                        <label>
+                            Post content<br>
+                            <textarea v-model="post.content" class="post-content"></textarea>
+                        </label>
+                        <button @click="createPost()" :disabled="post.content === ''" class="button">post</button>
+                    </form>
                 </div>
             </div>
         </div>
+        <edit-post v-if="editModalStatus.status"/>
     </div>
 </template>
 
 <script>
   import DashboardNav from "../components/DashboardNav";
   import {mapState} from "vuex";
-  import SinglePost from "../components/SinglePost";
+  // import SinglePost from "../components/SinglePost";
+  import EditPost from "../components/EditPost";
+  import ListCategory from "../components/ListCategory";
 
   export default {
     name: "Dashboard",
-    components: {SinglePost, DashboardNav},
+    components: {ListCategory, EditPost, DashboardNav},
     data() {
       return {
         post: {
@@ -66,22 +61,22 @@
       }
     },
     computed: {
-      ...mapState(['userProfile', 'posts', 'categories'])
+      ...mapState(['userProfile', 'posts', 'categories', 'editModalStatus', 'selectedCategories'])
     },
-    // update u delete + masivi mas@ categorianeri + dizayn@ u code review commentner
     watch: {
       categories(val) {
         return val
       }
     },
     created() {
-      this.$store.dispatch('getCategory', '0')
+      this.$store.dispatch('getAllCategory')
+      // this.categoriesList.push(this.selectedCategories)
     },
     methods: {
       createPost() {
         this.$store.dispatch('createPost', {
           content: this.post.content,
-          category: this.categoriesList,
+          category: this.selectedCategories,
           title: this.post.title
         })
         this.post.content = ''
@@ -103,18 +98,11 @@
         height: 100vh
     }
 
-    .menu {
-        background: #39557c;
-        color: #fff;
-        width: 250px;
-        min-width: 250px;
-        height: 100%;
-    }
-
     .content {
         flex-grow: 2;
         text-align: left;
         padding: 20px;
+        margin-left: 240px;
     }
 
     .post-block {
@@ -124,33 +112,55 @@
         margin-top: 20px;
     }
 
-    .category {
-        padding: 10px;
-        border: 1px solid #ccc;
-        border-radius: 6px;
-        display: inline-block;
+    .filter-category, .filter-category ul {
+       list-style: none;
     }
 
     .clicked {
         background: #39557c;
         color: #fff
     }
-    .post-content{
+
+    .post-content {
         width: 300px;
         height: 200px;
         border: 1px solid #ccc;
     }
-    .button{
+
+    .button {
         background: #39557c;
         padding: 10px 30px;
         border-radius: 6px;
         border: none;
         text-transform: uppercase;
-        color:#fff
+        color: #fff;
+        margin-bottom: 50px;
     }
-    .crete-post-form{
+
+    .crete-post-form {
         display: flex;
         flex-direction: column;
-        justify-content: flex-start;
+        /*justify-content: flex-start;*/
+        width: 50%;
+    }
+
+    .crete-post-form input,
+    .crete-post-form textarea,
+    .crete-post-form button {
+        width: 100%;
+        padding: 15px 5px;
+        border: 1px solid #ccc
+    }
+
+    .crete-post-form button {
+        align-self: center;
+    }
+
+    .crete-post-form label {
+        margin-top: 20px;
+    }
+
+    .m-0 {
+        margin: 0;
     }
 </style>

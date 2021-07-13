@@ -20,7 +20,9 @@ const store = new Vuex.Store({
   state: {
     userProfile: {},
     posts: [],
-    categories: []
+    categories: [],
+    editModalStatus: false,
+    selectedCategories: []
   },
   mutations: {
     setUserProfile(state, val) {
@@ -31,6 +33,12 @@ const store = new Vuex.Store({
     },
     setCategories(state, val) {
       state.categories = val
+    },
+    setEditModalStatus(state, val){
+      state.editModalStatus = val
+    },
+    setSelectedCategories(state, val){
+      state.selectedCategories = val
     }
   },
   actions: {
@@ -41,7 +49,6 @@ const store = new Vuex.Store({
     async fetchUserProfile({ commit }, user) {
       const userProfile = await fb.usersCollection.doc(user.uid).get()
       commit('setUserProfile', userProfile.data())
-      // await dispatch('getCategory', {parent:'0'})
       if (router.currentRoute.path === '/login') {
         router.push('/dashboard')
       }
@@ -51,8 +58,9 @@ const store = new Vuex.Store({
       commit('setUserProfile', {})
       router.push('/login')
     },
-    async getCategory({ state }, parent) {
-      const categoryList = await fb.categoriesCollection.where('parentId', '==', parent).get()
+    async getAllCategory({ state }) {
+      const categoryList = await fb.categoriessCollection.get()
+      state.categories=[]
       categoryList.forEach(doc => {
         let cat = doc.data()
         cat.id = doc.id
@@ -60,6 +68,7 @@ const store = new Vuex.Store({
         // commit('setCategories', cat)
       })
     },
+
     async createPost({ state }, post) {
       await fb.postsCollection.add({
         createdOn: new Date(),
@@ -73,6 +82,14 @@ const store = new Vuex.Store({
     // eslint-disable-next-line no-empty-pattern
     async deletePostFromFb({ }, post) {
       await fb.postsCollection.doc(post).delete()
+    },
+    // eslint-disable-next-line no-empty-pattern
+    async editPostData({}, postData) {
+      alert(111)
+      await fb.postsCollection.doc(postData.id).update({
+        content: postData.content,
+        title: postData.title
+      })
     }
   }
 })

@@ -1,0 +1,76 @@
+<template>
+    <li>
+        <!--parent-->
+        <span v-if="isFolder"  @click="toggle(data.categoryName)">
+            <span class="fa fa-fw" :class="icon"></span> {{data.categoryName}}
+            <span v-if="rout === '/categories'">
+                <svg id="Layer_1" enable-background="new 0 0 512 512" height="20" viewBox="0 0 512 512" width="20" @click="deleteCat(data)">
+                    <g>
+                        <path
+                                d="m424 64h-88v-16c0-26.467-21.533-48-48-48h-64c-26.467 0-48 21.533-48 48v16h-88c-22.056 0-40 17.944-40 40v56c0 8.836 7.164 16 16 16h8.744l13.823 290.283c1.221 25.636 22.281 45.717 47.945 45.717h242.976c25.665 0 46.725-20.081 47.945-45.717l13.823-290.283h8.744c8.836 0 16-7.164 16-16v-56c0-22.056-17.944-40-40-40zm-216-16c0-8.822 7.178-16 16-16h64c8.822 0 16 7.178 16 16v16h-96zm-128 56c0-4.411 3.589-8 8-8h336c4.411 0 8 3.589 8 8v40c-4.931 0-331.567 0-352 0zm313.469 360.761c-.407 8.545-7.427 15.239-15.981 15.239h-242.976c-8.555 0-15.575-6.694-15.981-15.239l-13.751-288.761h302.44z"/>
+                        <path
+                                d="m256 448c8.836 0 16-7.164 16-16v-208c0-8.836-7.164-16-16-16s-16 7.164-16 16v208c0 8.836 7.163 16 16 16z"/>
+                        <path
+                                d="m336 448c8.836 0 16-7.164 16-16v-208c0-8.836-7.164-16-16-16s-16 7.164-16 16v208c0 8.836 7.163 16 16 16z"/>
+                        <path
+                                d="m176 448c8.836 0 16-7.164 16-16v-208c0-8.836-7.164-16-16-16s-16 7.164-16 16v208c0 8.836 7.163 16 16 16z"/>
+                    </g>
+                </svg>
+                <svg height="20" viewBox="0 0 512 511" width="20" @click="editPost(data)">
+                    <path d="m405.332031 256.484375c-11.796875 0-21.332031 9.558594-21.332031 21.332031v170.667969c0 11.753906-9.558594 21.332031-21.332031 21.332031h-298.667969c-11.777344 0-21.332031-9.578125-21.332031-21.332031v-298.667969c0-11.753906 9.554687-21.332031 21.332031-21.332031h170.667969c11.796875 0 21.332031-9.558594 21.332031-21.332031 0-11.777344-9.535156-21.335938-21.332031-21.335938h-170.667969c-35.285156 0-64 28.714844-64 64v298.667969c0 35.285156 28.714844 64 64 64h298.667969c35.285156 0 64-28.714844 64-64v-170.667969c0-11.796875-9.539063-21.332031-21.335938-21.332031zm0 0"/>
+                    <path d="m200.019531 237.050781c-1.492187 1.492188-2.496093 3.390625-2.921875 5.4375l-15.082031 75.4375c-.703125 3.496094.40625 7.101563 2.921875 9.640625 2.027344 2.027344 4.757812 3.113282 7.554688 3.113282.679687 0 1.386718-.0625 2.089843-.210938l75.414063-15.082031c2.089844-.429688 3.988281-1.429688 5.460937-2.925781l168.789063-168.789063-75.414063-75.410156zm0 0"/>
+                    <path d="m496.382812 16.101562c-20.796874-20.800781-54.632812-20.800781-75.414062 0l-29.523438 29.523438 75.414063 75.414062 29.523437-29.527343c10.070313-10.046875 15.617188-23.445313 15.617188-37.695313s-5.546875-27.648437-15.617188-37.714844zm0 0"/>
+                </svg>
+            </span>
+        </span>
+        <!--if not folding, we do not need an binding event-->
+        <span v-else :title="data.categoryName" :class="{active: data.id === categoryId}"><span class="fa fa-fw fa-circle-o"></span> {{data.categoryName}}</span>
+        <!--children-->
+        <ul v-if="isFolder" :class="isShow">
+            <list-category v-for="(data, index) in data.children" :key="index" :data="data" :search="search" :category-id="categoryId"></list-category>
+        </ul>
+    </li>
+</template>
+
+<script>
+  export default {
+    name: "ListCategory",
+    props: ['data', 'categoryId', 'search'],
+    data() {
+      return {
+        open: false,
+        rout: ''
+      }
+    },
+    created() {
+      this.rout = this.$route.fullPath
+    },
+    computed: {
+      icon() {
+        return {
+          'fa-plus': !this.open,
+          'fa-minus': this.open,
+        }
+      },
+      isFolder() {
+        return this.data.children && this.data.children.length
+      },
+      isShow() {
+        return this.open ? 'show' : 'hide'
+      }
+    },
+    methods: {
+      toggle(val) {
+        this.open = !this.open
+        alert(val)
+        this.$store.commit('setSelectedCategories', val)
+      }
+    }
+  }
+</script>
+
+<style scoped>
+ul{
+    list-style: none;
+}
+</style>

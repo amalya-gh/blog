@@ -1,5 +1,5 @@
 <template>
-    <ul class="points">
+    <ul class="points menu">
         <li>
             <router-link to="/dashboard">Dashboard</router-link>
         </li>
@@ -28,6 +28,15 @@
     .points{
         list-style: none;
         text-align: left;
+        margin: 0;
+    }
+    .menu {
+        background: #39557c;
+        color: #fff;
+        width: 200px;
+        min-width: 200px;
+        height: 100%;
+        position: fixed;
     }
     .points li{
         margin-top: 20px;

@@ -13,26 +13,30 @@
                             d="m176 448c8.836 0 16-7.164 16-16v-208c0-8.836-7.164-16-16-16s-16 7.164-16 16v208c0 8.836 7.163 16 16 16z"/>
                 </g>
             </svg>
-            <svg height="20" viewBox="0 0 512 511" width="20" @click="editPost()">
+            <svg height="20" viewBox="0 0 512 511" width="20" @click="editPost(post)">
                 <path d="m405.332031 256.484375c-11.796875 0-21.332031 9.558594-21.332031 21.332031v170.667969c0 11.753906-9.558594 21.332031-21.332031 21.332031h-298.667969c-11.777344 0-21.332031-9.578125-21.332031-21.332031v-298.667969c0-11.753906 9.554687-21.332031 21.332031-21.332031h170.667969c11.796875 0 21.332031-9.558594 21.332031-21.332031 0-11.777344-9.535156-21.335938-21.332031-21.335938h-170.667969c-35.285156 0-64 28.714844-64 64v298.667969c0 35.285156 28.714844 64 64 64h298.667969c35.285156 0 64-28.714844 64-64v-170.667969c0-11.796875-9.539063-21.332031-21.335938-21.332031zm0 0"/>
                 <path d="m200.019531 237.050781c-1.492187 1.492188-2.496093 3.390625-2.921875 5.4375l-15.082031 75.4375c-.703125 3.496094.40625 7.101563 2.921875 9.640625 2.027344 2.027344 4.757812 3.113282 7.554688 3.113282.679687 0 1.386718-.0625 2.089843-.210938l75.414063-15.082031c2.089844-.429688 3.988281-1.429688 5.460937-2.925781l168.789063-168.789063-75.414063-75.410156zm0 0"/>
                 <path d="m496.382812 16.101562c-20.796874-20.800781-54.632812-20.800781-75.414062 0l-29.523438 29.523438 75.414063 75.414062 29.523437-29.527343c10.070313-10.046875 15.617188-23.445313 15.617188-37.695313s-5.546875-27.648437-15.617188-37.714844zm0 0"/>
             </svg>
         </p>
+        <h2>{{post.title}}</h2>
         <p>{{ post.content}}</p>
         <span>{{ post.createdOn | formatDate }}</span>
         <h5>Posted by {{ post.userName }}</h5>
         Categories
         <div class="post-categories">
-            <p v-for="i in post.category" :key="i+'post'">{{i}}</p>
+          {{post.category}}
         </div>
     </div>
 </template>
 
 <script>
   import moment from "moment";
+  import {mapState} from "vuex";
+  // import ListCategory from "./ListCategory";
   export default {
     name: "SinglePost",
+    // components: {ListCategory},
     props: {
       post: Object
     },
@@ -44,9 +48,20 @@
     created() {
       this.rout = this.$route.fullPath
     },
+    computed:{
+      ...mapState(['editModalStatus'])
+    },
     methods:{
       deletePost(val){
         this.$store.dispatch('deletePostFromFb', val.id)
+      },
+      editPost(val){
+        this.$store.commit('setEditModalStatus', {
+          status:true,
+          title: val.title,
+          content: val.content,
+          id: val.id
+        })
       }
     },
     filters: {
@@ -66,7 +81,7 @@
         border: 2px solid #ccc;
         padding: 15px;
         border-radius: 6px;
-        width: 30%;
+        width: 40%;
         margin-top: 20px;
         text-align: left;
     }
@@ -77,5 +92,11 @@
 
     .post-categories p {
         margin: 6px;
+    }
+
+    @media (max-width: 555px){
+        .post{
+            width: 90%;
+        }
     }
 </style>
