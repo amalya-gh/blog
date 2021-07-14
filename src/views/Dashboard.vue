@@ -14,13 +14,6 @@
                     <ul class="filter-category" v-for="(list, index) in categories" :key="index">
                         <list-category :data="list" :category-id="list.categoryId"  @click="selectCategory(list, $event)"></list-category>
                     </ul>
-<!--                    <p v-for="(i, index) in categories"-->
-<!--                       :key="index"-->
-<!--                       @click="selectCategory(i, $event)"-->
-<!--                       class="category"-->
-<!--                    >-->
-<!--                        {{i.categoryName}}-->
-<!--                    </p>-->
                 </div>
                 <div class="create-post">
                     <form class="crete-post-form" @submit.prevent>
@@ -44,7 +37,6 @@
 <script>
   import DashboardNav from "../components/DashboardNav";
   import {mapState} from "vuex";
-  // import SinglePost from "../components/SinglePost";
   import EditPost from "../components/EditPost";
   import ListCategory from "../components/ListCategory";
 
@@ -70,7 +62,6 @@
     },
     created() {
       this.$store.dispatch('getAllCategory')
-      // this.categoriesList.push(this.selectedCategories)
     },
     methods: {
       createPost() {
