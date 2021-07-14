@@ -23,7 +23,8 @@ const store = new Vuex.Store({
     categories: [],
     editModalStatus: false,
     selectedCategories: [],
-    addCategoryStatus: false
+    addCategoryStatus: false,
+    editCategoryStatus: false
   },
   mutations: {
     setUserProfile(state, val) {
@@ -44,6 +45,9 @@ const store = new Vuex.Store({
     },
     setAddCategoryModal(state, val){
       state.addCategoryStatus = val
+    },
+    setEditCategoryModal(state, val){
+      state.editCategoryStatus = val
     }
   },
   actions: {
@@ -98,29 +102,14 @@ const store = new Vuex.Store({
     // eslint-disable-next-line no-empty-pattern
     async addNewCategory({}, categoryData) {
       console.log(categoryData);
-      const catRef = fb.ref('children');
-      console.log(catRef);
-      // await fb.categoriessCollection.doc(categoryData.id).update({
-      //   categoryName: categoryData.name,
-      //   parentId: categoryData.parentId,
-      //   categoryId: categoryData.catId
-      // })
-    },
-    changeTask(task, column) {
-      this.$firebaseRefs.tasks.orderByChild('id').equalTo(task.id).once('value').then( (snapshot) => {
-        const key = Object.keys(snapshot.val())[0]
-        const data = {
-          text: task.text,
-          column: column
-        }
-        // Update firebase entry with new data
-        const updates = data
-
-        this.$firebaseRefs.tasks.child(key).update(updates)
-
+      // const catRef = fb.ref('children');
+      // console.log(catRef);
+      await fb.categoriessCollection.doc(categoryData.id).update({
+        categoryName: categoryData.name,
+        parentId: categoryData.parentId || '0',
+        categoryId: categoryData.catId
       })
     }
-
   }
 })
 
